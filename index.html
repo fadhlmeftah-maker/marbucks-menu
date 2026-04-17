@@ -3,185 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MARBUCKS | القائمة الملكية</title>
+    <title>Marbucks | القائمة العالمية</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --brand-gold: #d4af37; 
-            --brand-dark-green: #003322; 
-            --brand-deep: #001a11; 
+            --brand-gold: #d4af37;
+            --brand-dark: #0a0f0d;
         }
         body {
             font-family: 'Tajawal', sans-serif;
-            background-color: var(--brand-deep);
+            background-color: var(--brand-dark);
             color: white;
             overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
         }
         .glass-panel {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(212, 175, 55, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .gold-text { color: var(--brand-gold); }
-        .gold-bg { background-color: var(--brand-gold); color: var(--brand-deep); }
-        .cat-tab.active { color: var(--brand-gold); border-bottom: 3px solid var(--brand-gold); font-weight: 900; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .cat-scroll::-webkit-scrollbar { display: none; }
+        .cat-tab { transition: all 0.3s; opacity: 0.5; white-space: nowrap; font-weight: 700; border-bottom: 2px solid transparent; padding-bottom: 8px;}
+        .cat-tab.active { opacity: 1; color: var(--brand-gold); border-bottom-color: var(--brand-gold); font-weight: 900; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fadeUp { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     </style>
 </head>
 <body class="antialiased">
 
-    <div id="welcome-screen" class="fixed inset-0 z-[2000] bg-[#001a11] flex flex-col justify-between">
-        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-30"></div>
-        
-        <div class="relative z-10 flex flex-col items-center justify-center pt-24">
-            <img src="https://drive.google.com/thumbnail?id=15eh4TMdHW9Glp1EB-T1VM1X_P6TECU-Q&sz=w500" class="w-48 h-48 rounded-full border-2 border-[#d4af37] shadow-[0_0_40px_rgba(212,175,55,0.2)] mb-6">
-            <h1 class="text-5xl font-black uppercase tracking-[0.2em] gold-text italic">MARBUCKS</h1>
-            <p class="mt-4 text-[10px] tracking-[0.5em] uppercase opacity-70">The Royal Taste of Marib</p>
+    <div id="welcome-screen" class="fixed inset-0 z-[2000] bg-[url('https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=1000')] bg-cover bg-center flex flex-col justify-between text-center">
+        <div class="absolute inset-0 bg-gradient-to-b from-[#0a0f0d]/90 via-[#0a0f0d]/80 to-[#0a0f0d] backdrop-blur-sm"></div>
+        <div class="relative z-10 flex flex-col items-center justify-center pt-20">
+            <img src="https://i.ibb.co/m5v8G8p6/marbucks-logo.png" class="w-36 h-36 rounded-full border-2 border-[#d4af37] shadow-[0_0_60px_rgba(212,175,55,0.4)] mb-8 animate-pulse">
+            <h1 class="text-5xl font-black uppercase tracking-widest italic gold-text">Marbucks</h1>
+            <p class="mt-4 text-sm tracking-[0.4em] uppercase opacity-70">Experience True Luxury</p>
         </div>
-
-        <div class="relative z-10 p-8 w-full max-w-md mx-auto mb-12 space-y-4">
-            <p class="text-center text-xs gold-text mb-4 font-bold tracking-widest uppercase italic">اختر وجهتك</p>
-            
-            <button onclick="startApp('برج الروهجان (المركز الرئيسي)')" class="w-full glass-panel p-6 rounded-[2rem] font-bold text-lg hover:border-[#d4af37] transition-all text-right flex justify-between items-center group">
+        <div class="relative z-10 p-8 w-full max-w-md mx-auto mb-10 space-y-4">
+            <button onclick="startApp('برج الروهجان (المركز الرئيسي)')" class="w-full glass-panel p-5 rounded-3xl font-bold text-lg text-right flex justify-between items-center">
                 <span>🏛️ برج الروهجان (المركز الرئيسي)</span>
-                <span class="opacity-30 group-hover:translate-x-[-10px] transition-all">←</span>
+                <span class="gold-text">←</span>
             </button>
-
-            <button onclick="startApp('صالة الروهجان أكشن')" class="w-full glass-panel p-6 rounded-[2rem] font-bold text-lg hover:border-[#d4af37] transition-all text-right flex justify-between items-center group">
+            <button onclick="startApp('شارع الجامعة')" class="w-full glass-panel p-5 rounded-3xl font-bold text-lg text-right flex justify-between items-center">
+                <span>🎓 فرع شارع الجامعة</span>
+                <span class="gold-text">←</span>
+            </button>
+            <button onclick="startApp('صالة الروهجان أكشن')" class="w-full glass-panel p-5 rounded-3xl font-bold text-lg text-right flex justify-between items-center">
                 <span>⚡ صالة الروهجان أكشن</span>
-                <span class="opacity-30 group-hover:translate-x-[-10px] transition-all">←</span>
+                <span class="gold-text">←</span>
             </button>
         </div>
     </div>
 
     <div id="main-app" class="hidden min-h-screen flex flex-col">
-        <header class="sticky top-0 z-[100] bg-[#00261a]/95 backdrop-blur-md border-b border-[#d4af37]/20 px-6 py-4 flex justify-between items-center">
+        <header class="sticky top-0 z-[100] bg-[#0a0f0d]/90 backdrop-blur-xl border-b border-white/5 px-6 py-4 flex justify-between items-center text-center">
             <div class="flex items-center gap-3">
-                <img src="https://drive.google.com/thumbnail?id=15eh4TMdHW9Glp1EB-T1VM1X_P6TECU-Q&sz=w100" class="w-12 h-12 rounded-full border border-[#d4af37]/40">
-                <div class="leading-none">
-                    <h2 class="text-xl font-black italic gold-text uppercase">MARBUCKS</h2>
-                    <p id="branch-display" class="text-[9px] text-white/60 font-bold mt-1 uppercase tracking-tighter"></p>
+                <img src="https://i.ibb.co/m5v8G8p6/marbucks-logo.png" class="w-12 h-12 rounded-full border border-[#d4af37]/40">
+                <div class="leading-none text-right">
+                    <h2 class="text-xl font-black uppercase italic tracking-tighter">Marbucks</h2>
+                    <p id="branch-display" class="text-[9px] gold-text font-bold mt-1 uppercase"></p>
                 </div>
             </div>
-            
-            <div onclick="toggleCart()" class="relative bg-[#d4af37] p-3 rounded-2xl cursor-pointer active:scale-90 transition-transform">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#001a11]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div onclick="toggleCart()" class="relative bg-[#d4af37] p-3 rounded-2xl shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#0a0f0d]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
-                <span id="cart-badge" class="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-black hidden border-2 border-[#001a11]">0</span>
+                <span id="cart-badge" class="absolute -top-2 -right-2 bg-red-600 text-white text-[11px] w-5 h-5 rounded-full flex items-center justify-center font-black hidden">0</span>
             </div>
         </header>
 
-        <nav class="sticky top-[81px] z-[90] bg-[#001a11] border-b border-white/5 py-4 px-6 overflow-x-auto flex gap-6 items-center no-scrollbar">
-            <button onclick="filterMenu('legends')" class="cat-tab active whitespace-nowrap" id="tab-legends">أساطير سبأ</button>
-            <button onclick="filterMenu('mojito')" class="cat-tab whitespace-nowrap" id="tab-mojito">مهيتو</button>
-            <button onclick="filterMenu('cold')" class="cat-tab whitespace-nowrap" id="tab-cold">بارد</button>
-            <button onclick="filterMenu('hot')" class="cat-tab whitespace-nowrap" id="tab-hot">ساخن</button>
+        <nav class="sticky top-[81px] z-[90] bg-[#0a0f0d] border-b border-white/5 py-4 px-6 overflow-x-auto cat-scroll flex gap-8 items-center">
+            <button onclick="filterMenu('legends')" class="cat-tab active" id="tab-legends">أساطير سبأ</button>
+            <button onclick="filterMenu('mojito')" class="cat-tab" id="tab-mojito">مهيتو</button>
+            <button onclick="filterMenu('cold')" class="cat-tab" id="tab-cold">بارد</button>
+            <button onclick="filterMenu('hot')" class="cat-tab" id="tab-hot">ساخن</button>
         </nav>
 
-        <main class="flex-grow p-6">
-            <div id="products-grid" class="grid grid-cols-2 md:grid-cols-3 gap-5">
+        <main class="flex-grow p-6 py-10">
+            <div id="products-grid" class="grid grid-cols-2 gap-6">
                 </div>
         </main>
-
-        <footer class="bg-[#000d08] p-10 text-center border-t border-[#d4af37]/10">
-            <img src="https://drive.google.com/thumbnail?id=15eh4TMdHW9Glp1EB-T1VM1X_P6TECU-Q&sz=w200" class="w-16 h-16 mx-auto rounded-full mb-4 opacity-40 grayscale">
-            <p class="text-[10px] tracking-[0.3em] gold-text uppercase mb-8">Marbucks Coffee | Marib</p>
-            <a href="https://wa.me/967780011501" class="inline-block bg-[#25D366] text-white px-8 py-4 rounded-full font-black text-sm shadow-lg">اطلب الآن عبر واتساب</a>
-        </footer>
-    </div>
-
-    <div id="cart-drawer" class="fixed inset-0 z-[1500] bg-black/90 backdrop-blur-md hidden flex-col justify-end">
-        <div class="bg-[#001a11] w-full max-h-[75vh] rounded-t-[3rem] p-8 border-t-2 border-[#d4af37]">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl font-black gold-text">سلتك الملكية</h2>
-                <button onclick="toggleCart()" class="text-white text-3xl">✕</button>
-            </div>
-            <div id="cart-list" class="overflow-y-auto max-h-[35vh] space-y-4 mb-8"></div>
-            <div class="flex justify-between items-center mb-8">
-                <span class="opacity-60 text-lg">الإجمالي:</span>
-                <span id="cart-total-price" class="text-3xl font-black gold-text">0 ريال</span>
-            </div>
-            <button onclick="sendOrderToWhatsApp()" class="w-full bg-[#d4af37] text-[#001a11] p-6 rounded-[2rem] font-black text-xl">تأكيد الطلب</button>
-        </div>
     </div>
 
     <script>
-        // قاعدة البيانات التجريبية
         let productsDatabase = [
-            { id: 1, cat: 'legends', name: 'ماربكس سجنتشر', price: 4500, img: 'https://images.unsplash.com/photo-1544145945-f904253d0c71?w=400' },
-            { id: 2, cat: 'legends', name: 'إكسير سبأ', price: 4000, img: 'https://images.unsplash.com/photo-1497534446932-c946e7316ba1?w=400' },
-            { id: 101, cat: 'mojito', name: 'مهيتو كلاسيك', price: 2000, img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=400' },
-            { id: 201, cat: 'cold', name: 'سبانش لاتيه بارد', price: 3200, img: 'https://images.unsplash.com/photo-1559496417-e7f25cb247f3?w=400' }
+            { id: 1, cat: 'legends', name: 'ماربكس سجنتشر', price: 4500, img: 'https://images.unsplash.com/photo-1544145945-f904253d0c71?w=500' },
+            { id: 2, cat: 'legends', name: 'إكسير سبأ', price: 4000, img: 'https://images.unsplash.com/photo-1497534446932-c946e7316ba1?w=500' }
         ];
-
         let userCart = [];
+        let activeBranch = "";
 
-        function startApp(branch) {
-            document.getElementById('welcome-screen').classList.add('opacity-0');
-            setTimeout(() => {
-                document.getElementById('welcome-screen').style.display = 'none';
-                document.getElementById('main-app').classList.remove('hidden');
-                document.getElementById('branch-display').innerText = branch;
-                filterMenu('legends');
-            }, 300);
+        function startApp(branchName) {
+            activeBranch = branchName;
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById('main-app').classList.remove('hidden');
+            document.getElementById('branch-display').innerText = branchName;
+            filterMenu('legends');
         }
 
-        function filterMenu(cat) {
-            document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
-            document.getElementById('tab-'+cat).classList.add('active');
+        function filterMenu(category) {
+            document.querySelectorAll('.cat-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById('tab-' + category).classList.add('active');
             const grid = document.getElementById('products-grid');
             grid.innerHTML = '';
-            productsDatabase.filter(p => p.cat === cat).forEach(item => {
+            productsDatabase.filter(p => p.cat === category).forEach(item => {
                 grid.innerHTML += `
-                    <div class="glass-panel p-4 rounded-[2rem] text-center border-[#d4af37]/10">
-                        <img src="${item.img}" class="w-full h-32 object-cover rounded-3xl mb-4">
-                        <h3 class="text-[12px] font-bold mb-1 leading-tight h-8 overflow-hidden">${item.name}</h3>
-                        <p class="gold-text font-black text-sm mb-4">${item.price} <span class="text-[8px]">ر.ي</span></p>
-                        <button onclick="addToCart(${item.id})" class="w-full py-2.5 bg-white/5 rounded-2xl text-[10px] font-bold hover:bg-gold hover:text-black">إضافة +</button>
-                    </div>
-                `;
+                    <div class="glass-panel rounded-3xl p-4 flex flex-col items-center text-center animate-fadeUp">
+                        <img src="${item.img}" class="w-full h-32 object-cover rounded-2xl mb-4">
+                        <h3 class="font-bold text-xs mb-2">${item.name}</h3>
+                        <p class="gold-text font-black mb-4">${item.price} ر.ي</p>
+                        <button onclick="addToCart(${item.id})" class="w-full py-2 bg-[#d4af37] text-black rounded-xl font-bold text-xs">إضافة</button>
+                    </div>`;
             });
         }
 
         function addToCart(id) {
-            const product = productsDatabase.find(p => p.id === id);
-            userCart.push(product);
+            const p = productsDatabase.find(i => i.id === id);
+            userCart.push(p);
             document.getElementById('cart-badge').innerText = userCart.length;
             document.getElementById('cart-badge').classList.remove('hidden');
-        }
-
-        function toggleCart() {
-            const drawer = document.getElementById('cart-drawer');
-            drawer.classList.toggle('hidden');
-            drawer.classList.toggle('flex');
-            renderCart();
-        }
-
-        function renderCart() {
-            const list = document.getElementById('cart-list');
-            list.innerHTML = '';
-            let total = 0;
-            userCart.forEach(item => {
-                total += item.price;
-                list.innerHTML += `
-                    <div class="flex justify-between items-center py-2 border-b border-white/5">
-                        <span class="text-sm font-bold">${item.name}</span>
-                        <span class="gold-text font-black text-sm">${item.price} ر.ي</span>
-                    </div>
-                `;
-            });
-            document.getElementById('cart-total-price').innerText = total + " ريال";
-        }
-
-        function sendOrderToWhatsApp() {
-            if (userCart.length === 0) return;
-            let msg = `*طلب ملكي - MARBUCKS* 👑\n------------------\n📍 الموقع: ${document.getElementById('branch-display').innerText}\n\n`;
-            userCart.forEach(i => msg += `• ${i.name} (${i.price} ر.ي)\n`);
-            msg += `\n------------------\n*الإجمالي: ${document.getElementById('cart-total-price').innerText}*`;
-            window.open(`https://wa.me/967780011501?text=${encodeURIComponent(msg)}`);
         }
     </script>
 </body>
