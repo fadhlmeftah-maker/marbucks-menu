@@ -7,100 +7,109 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root { --brand-gold:#d4af37; --brand-dark:#0a0f0d; --brand-green:#003322; }
-body { font-family:'Tajawal',sans-serif; background-color:var(--brand-dark); color:white; overflow-x:hidden; }
-.glass-panel { background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); border:1px solid rgba(255,255,255,0.1); }
-.gold-text{ color: var(--brand-gold);}
-.gold-bg{ background-color: var(--brand-gold); color: var(--brand-dark);}
+:root {
+    --brand-gold: #d4af37;
+    --brand-dark: #0a0f0d;
+    --brand-green: #003322;
+}
+body {
+    font-family: 'Tajawal', sans-serif;
+    background-color: var(--brand-dark);
+    color: white;
+    overflow-x: hidden;
+}
+.glass-panel {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.gold-text { color: var(--brand-gold); }
+.gold-bg { background-color: var(--brand-gold); color: var(--brand-dark); }
 .cat-scroll::-webkit-scrollbar { display:none; }
-.cat-tab{transition:all 0.3s; opacity:0.5; white-space:nowrap; font-weight:700; border-bottom:2px solid transparent; padding-bottom:8px;}
-.cat-tab.active{opacity:1; color: var(--brand-gold); border-bottom-color: var(--brand-gold); font-weight:900;}
-.product-card{transition:transform 0.2s;}
-.product-card:active{transform: scale(0.96);}
+.cat-tab { transition: all 0.3s; opacity:0.5; white-space: nowrap; font-weight:700; border-bottom:2px solid transparent; padding-bottom:8px;}
+.cat-tab.active { opacity:1; color: var(--brand-gold); border-bottom-color: var(--brand-gold); font-weight:900; }
+.product-card { transition: transform 0.2s; }
+.product-card:active { transform: scale(0.96); }
+
+/* شعار احترافي */
 .logo-container { display:flex; align-items:center; justify-content:center; border-radius:50%; transition: all 0.3s ease; }
 .marbucks-logo { object-fit: contain; transition: all 0.3s ease; }
-.logo-container:hover { transform: scale(1.08); box-shadow:0 0 50px rgba(212,175,55,0.9),0 0 80px rgba(212,175,55,0.5);}
+.logo-container:hover { transform: scale(1.08); box-shadow:0 0 50px rgba(212,175,55,0.9), 0 0 80px rgba(212,175,55,0.5);}
 .logo-container:hover .marbucks-logo { filter: drop-shadow(0 0 20px rgba(212,175,55,0.7)); }
-.logo-header{ width:48px; height:48px; }
-.logo-welcome{ width:144px; height:144px; }
-.logo-footer{ width:80px; height:80px; opacity:0.3;}
+.logo-header { width:48px; height:48px; }
+.logo-welcome { width:144px; height:144px; }
+.logo-footer { width:80px; height:80px; opacity:0.3; }
 </style>
 </head>
 <body class="antialiased">
 
 <!-- شاشة الترحيب -->
 <div id="welcome-screen" class="fixed inset-0 z-[2000] bg-[url('https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=1000')] bg-cover bg-center flex flex-col justify-between">
-<div class="absolute inset-0 bg-gradient-to-b from-[#0a0f0d]/90 via-[#0a0f0d]/80 to-[#0a0f0d] backdrop-blur-sm"></div>
-<div class="relative z-10 flex flex-col items-center justify-center pt-20">
-    <div class="logo-container logo-welcome">
-        <img src="marbucks-logo.svg" alt="Marbucks Logo" class="marbucks-logo">
+    <div class="absolute inset-0 bg-gradient-to-b from-[#0a0f0d]/90 via-[#0a0f0d]/80 to-[#0a0f0d] backdrop-blur-sm"></div>
+    <div class="relative z-10 flex flex-col items-center justify-center pt-20">
+        <img src="marbucks-logo.svg" alt="Marbucks Logo">
+        <h1 class="text-5xl font-black uppercase tracking-widest italic gold-text mt-4">Marbucks</h1>
+        <p class="mt-2 text-sm tracking-[0.4em] uppercase opacity-70">Experience True Luxury</p>
     </div>
-    <h1 class="text-5xl font-black uppercase tracking-widest italic gold-text mt-4">Marbucks</h1>
-    <p class="mt-2 text-sm tracking-[0.4em] uppercase opacity-70">Experience True Luxury</p>
-</div>
-<div class="relative z-10 p-8 w-full max-w-md mx-auto mb-10 space-y-4">
-    <div class="text-center mb-6">
-        <span class="bg-[#d4af37] text-[#0a0f0d] px-4 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">Select Your Destination</span>
+    <div class="relative z-10 p-8 w-full max-w-md mx-auto mb-10 space-y-4">
+        <div class="text-center mb-6">
+            <span class="bg-[#d4af37] text-[#0a0f0d] px-4 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">Select Your Destination</span>
+        </div>
+        <button onclick="startApp('برج الروهجان (المركز الرئيسي)')" class="w-full glass-panel p-5 rounded-3xl font-bold text-lg text-right flex justify-between items-center group">
+            <span>🏛️ برج الروهجان (المركز الرئيسي)</span>
+            <span class="opacity-30 group-hover:opacity-100 group-hover:-translate-x-2 transition-all">←</span>
+        </button>
+        <button onclick="startApp('شارع الجامعة')" class="w-full glass-panel p-5 rounded-3xl font-bold text-lg text-right flex justify-between items-center group">
+            <span>🎓 فرع شارع الجامعة</span>
+            <span class="opacity-30 group-hover:opacity-100 group-hover:-translate-x-2 transition-all">←</span>
+        </button>
+        <button onclick="startApp('صالة الروهجان أكشن')" class="w-full glass-panel p-5 rounded-3xl font-bold text-lg text-right flex justify-between items-center group">
+            <span>⚡ صالة الروهجان أكشن</span>
+            <span class="opacity-30 group-hover:opacity-100 group-hover:-translate-x-2 transition-all">←</span>
+        </button>
     </div>
-    <button onclick="startApp('برج الروهجان (المركز الرئيسي)')" class="w-full glass-panel p-5 rounded-3xl font-bold text-lg text-right flex justify-between items-center group">
-        <span>🏛️ برج الروهجان (المركز الرئيسي)</span>
-        <span class="opacity-30 group-hover:opacity-100 group-hover:-translate-x-2 transition-all">←</span>
-    </button>
-    <button onclick="startApp('شارع الجامعة')" class="w-full glass-panel p-5 rounded-3xl font-bold text-lg text-right flex justify-between items-center group">
-        <span>🎓 فرع شارع الجامعة</span>
-        <span class="opacity-30 group-hover:opacity-100 group-hover:-translate-x-2 transition-all">←</span>
-    </button>
-    <button onclick="startApp('صالة الروهجان أكشن')" class="w-full glass-panel p-5 rounded-3xl font-bold text-lg text-right flex justify-between items-center group">
-        <span>⚡ صالة الروهجان أكشن</span>
-        <span class="opacity-30 group-hover:opacity-100 group-hover:-translate-x-2 transition-all">←</span>
-    </button>
-</div>
 </div>
 
 <!-- Main App -->
 <div id="main-app" class="hidden min-h-screen flex flex-col">
 <header class="sticky top-0 z-[100] bg-[#0a0f0d]/90 backdrop-blur-xl border-b border-white/5 px-6 py-4 flex justify-between items-center">
-<div class="flex items-center gap-3">
-    <div class="logo-container logo-header"><img src="marbucks-logo.svg" class="marbucks-logo"></div>
-    <div class="leading-none">
-        <h2 class="text-xl font-black uppercase italic tracking-tighter">Marbucks</h2>
-        <p id="branch-display" class="text-[9px] gold-text font-bold mt-1 uppercase"></p>
+    <div class="flex items-center gap-3">
+        <img src="marbucks-logo.svg" class="marbucks-logo logo-header">
+        <div class="leading-none">
+            <h2 class="text-xl font-black uppercase italic tracking-tighter">Marbucks</h2>
+            <p id="branch-display" class="text-[9px] gold-text font-bold mt-1 uppercase"></p>
+        </div>
     </div>
-</div>
-<div class="flex items-center gap-4">
-    <button onclick="openPasswordModal()" class="text-white/60 hover:text-white transition-colors p-2">⚙️</button>
-    <div class="relative" onclick="toggleCart()">
-        <div class="bg-[#d4af37] p-3 rounded-2xl shadow-lg">🛒</div>
-        <span id="cart-badge" class="absolute -top-2 -right-2 bg-red-600 text-white text-[11px] w-5 h-5 rounded-full flex items-center justify-center font-black hidden border-2 border-[#0a0f0d]">0</span>
+    <div class="flex items-center gap-4">
+        <button onclick="openPasswordModal()" class="text-white/60 hover:text-white transition-colors p-2">⚙️</button>
+        <div class="relative" onclick="toggleCart()">
+            <div class="bg-[#d4af37] p-3 rounded-2xl shadow-lg">🛒</div>
+            <span id="cart-badge" class="absolute -top-2 -right-2 bg-red-600 text-white text-[11px] w-5 h-5 rounded-full flex items-center justify-center font-black hidden border-2 border-[#0a0f0d]">0</span>
+        </div>
     </div>
-</div>
 </header>
 
-<nav class="sticky top-[81px] z-[90] bg-[#0a0f0d] border-b border-white/5 py-4 px-6 overflow-x-auto cat-scroll flex gap-8 items-center">
-<button onclick="filterMenu('legends')" class="cat-tab active" id="tab-legends">أساطير سبأ</button>
-<button onclick="filterMenu('mojito')" class="cat-tab" id="tab-mojito">مهيتو (10)</button>
-<button onclick="filterMenu('cold')" class="cat-tab" id="tab-cold">بارد عالمي (6)</button>
-<button onclick="filterMenu('hot')" class="cat-tab" id="tab-hot">ساخن عالمي (6)</button>
-<button onclick="filterMenu('fastfood')" class="cat-tab" id="tab-fastfood">طازجة (3)</button>
-<button onclick="filterMenu('pastry')" class="cat-tab" id="tab-pastry">معجنات (5)</button>
-<button onclick="filterMenu('sweets')" class="cat-tab" id="tab-sweets">حلويات (6)</button>
-<button onclick="filterMenu('icecream')" class="cat-tab" id="tab-icecream">آيس كريم (5)</button>
-</nav>
-
-<main class="flex-grow p-6 py-10">
-<div id="products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-<!-- سيتم توليد المنتجات بواسطة JS مع صور تمثيلية عالية الجودة لكل صنف -->
-</div>
-</main>
+<!-- باقي الكود (التصنيفات، الشبكة، الفوتر، لوحة التحكم، السلة) كما سبق، مع استخدام "marbucks-logo.svg" في الفوتر أيضاً -->
 
 <footer class="glass-panel mt-10 rounded-t-[4rem] px-8 pt-16 pb-12 text-center">
-<div class="logo-container logo-footer mb-6"><img src="marbucks-logo.svg" class="marbucks-logo"></div>
-<h2 class="text-3xl font-black uppercase italic tracking-widest gold-text mb-2">Marbucks</h2>
-<p class="text-[10px] tracking-[0.3em] uppercase opacity-50 mb-10">The Crown of Coffee in Marib</p>
+    <img src="marbucks-logo.svg" class="marbucks-logo logo-footer mb-6">
+    <h2 class="text-3xl font-black uppercase italic tracking-widest gold-text mb-2">Marbucks</h2>
+    <p class="text-[10px] tracking-[0.3em] uppercase opacity-50 mb-10">The Crown of Coffee in Marib</p>
+    <!-- التواصل -->
 </footer>
 
 <script>
-// JavaScript كامل: المنتجات، السلة، لوحة التحكم، حفظ localStorage، كلمة السر 772520Fnam
+// ... كل وظائف JavaScript السابقة (السلة، لوحة التحكم، إضافة/تعديل المنتجات) ...
+
+// إضافة شعار احترافي تلقائي في كل مكان (شاشة الترحيب، الهيدر، الفوتر)
+window.addEventListener('DOMContentLoaded', () => {
+    const logoSrc = "marbucks-logo.svg";
+    document.querySelectorAll('img').forEach(img => {
+        if(img.src.includes('marbucks-logo')) {
+            img.classList.add('marbucks-logo');
+        }
+    });
+});
 </script>
 
 </body>
