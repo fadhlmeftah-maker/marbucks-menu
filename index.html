@@ -3,22 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marbucks | المنيو</title>
+    <title>Marbucks Official Menu</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="css/style.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&display=swap');
+        body { font-family: 'Tajawal', sans-serif; background-color: #0a0f0d; color: #ffffff; }
+        .gold-color { color: #d4af37; }
+        .bg-gold { background-color: #d4af37; }
+        .glass-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(212, 175, 55, 0.2); }
+        .cart-modal { position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center;}
+    </style>
 </head>
-<body class="bg-[#0a0f0d] text-white font-sans">
+<body>
 
-    <div class="flex justify-center pt-10">
-        <img src="assets/images/logo.webp" alt="Logo" class="w-32 h-32 rounded-full border-2 border-[#d4af37]">
+    <!-- شاشة البداية لاختيار الفرع -->
+    <div id="welcome-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black p-6 text-center">
+        <img src="https://i.ibb.co/wY3xR6N/marbucks-logo-new.png" class="w-32 h-32 mb-6">
+        <h1 class="text-3xl font-black gold-color mb-8">MARBUCKS</h1>
+        <div class="w-full space-y-3" id="branch-selection"></div>
     </div>
 
-    <div id="menu-container" class="p-6">
-        <h2 class="text-2xl text-[#d4af37] font-bold mb-4">قائمة المشروبات</h2>
-        <div id="products-list" class="grid gap-4">
+    <!-- شعار دائم أعلى المنيو -->
+    <div id="always-logo" class="flex flex-col items-center mt-6 mb-2" style="display:none;">
+        <img src="https://i.ibb.co/wY3xR6N/marbucks-logo-new.png" class="w-20 h-20 mb-2" alt="Marbucks Logo">
+    </div>
+
+    <div id="app" class="hidden min-h-screen pb-24">
+        <header class="p-6 border-b border-white/10 flex justify-between items-center">
+            <h2 class="text-xl font-bold">القائمة</h2>
+            <button onclick="toggleCart()" class="text-gold font-bold">🛒 السلة (<span id="cart-count">0</span>)</button>
+        </header>
+        <main id="menu-grid" class="p-6 grid grid-cols-1 gap-4"></main>
+    </div>
+
+    <!-- نافذة منبثقة لمراجعة السلة (اختياري: يمكن حذفها إذا لم ترد نافذة مراجعة) -->
+    <div id="cart-modal" class="cart-modal" style="display:none;">
+        <div class="bg-[#161b1f] rounded-2xl p-6 w-[95vw] max-w-md text-right">
+            <h3 class="gold-color text-lg font-bold mb-4">مراجعة السلة</h3>
+            <div id="cart-items" class="mb-4"></div>
+            <div class="flex justify-between items-center mb-4">
+                <button onclick="emptyCart()" class="bg-red-600 text-white px-3 py-1 rounded">افراغ السلة</button>
+                <span class="font-bold">الإجمالي: <span id="cart-total">0</span> ر.ي</span>
             </div>
+            <div class="flex justify-end gap-2">
+                <button onclick="confirmOrder()" class="bg-gold px-4 py-2 rounded text-black font-bold">تأكيد الطلب عبر واتس</button>
+                <button onclick="closeCartModal()" class="px-4 py-2 rounded border border-gold text-gold">إغلاق</button>
+            </div>
+        </div>
     </div>
 
-    <script src="js/app.js"></script>
+    <script>
+        // البيانات الأساسية للمنتجات والفروع
+        const CONFIG = {
+            branches: {
+                'المركز الرئيسي': '967780011501',
+                'فرع الجامعة': '967770499994'
+            },
+            products: [
+                { id: 1, name: 'ماربكس سجنتشر', price: 4500, desc: 'قهوة مختصة غنية مع خلطة ماربكس', img: 'https://images.unsplash.com/photo-1544145945-f904253d0c71?w=500' },
+                { id: 2, name: 'إكسير سبأ', price: 4000, desc: 'مزيج عريق من تاريخ اليمن', img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=500' },
+                // أضف المزيد إن أردت...
+            ]
+        };
+
+        let cart = [];
+        let selectedBranch = '';
+
+        // تحميل القيم من التخزين المحلي إذا موجودة
+        function loadState() {
+            selectedBranch = localStorage.getItem('selectedBranch') || '';
+            try {
+                cart = JSON.parse(localStorage.getItem('marbucksCart')) || [];
+            } catch { cart = []; }
+        }
+        // حفظ القيم عند كل تعديل
+        function saveState() {
+            localStorage.setItem('selectedBranch', selectedBranch);
+            localStorage.setItem('marbucksCart', JSON.stringify(cart));
+        }
+
+        // بدء التطبيق
+        function init() {
+            loadState();
+            const container = document.getElementById('branch-selection');
+            if (!selectedBranch) {
+                container.innerHTML = ""; // تفريغ
+                Object.keys(CONFIG.branches).forEach(branch => {
+                    container.innerHTML += `<button onclick="selectBranch('${branch}')" class="w-full p-4 border border-gold/30 rounded-xl hover:bg-gold/10 transition">${branch}</button>`;
+                });
+            } else {
+                // عاد العميل، أدخل مباشرة
+                document.getElementById('welcome-screen').classList.add('hidden');
+                document.getElementById('app').classList.remove('hidden');
+                document.getElementById('always-logo').style.display = 'flex';
+                renderProducts();
+                updateCartCount();
+            }
+        }
+
+        function selectBranch(branch) {
+            selectedBranch = branch;
+            saveState();
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('app').classList.remove('hidden');
+            document.getElementById('always-logo').style.display = 'flex';
+            renderProducts();
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('menu-grid');
+            grid.innerHTML = CONFIG.products.map(p => `
+                <div class="glass-card p-4 rounded-2xl flex gap-4">
+                    <img src="${p.img}" class="w-24 h-24 rounded-lg object-cover">
+                    <div>
+                        <h3 class="font-bold">${p.name}</h3>
+                        <p class="text-[12px] opacity-60 mb-1">${p.desc}</p>
+                        <p class="gold-color font-black">${p.price} ر.ي</p>
+                        <div class="mt-2">
+                            <button onclick="addToCart(${p.id})" class="bg-gold/20 px-4 py-1 rounded-lg text-sm">إضافة</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(id) {
+            const idx = cart.findIndex(item => item.id === id);
+            if (idx > -1) {
+                cart[idx].qty++;
+            } else {
+                const prod = CONFIG.products.find(p => p.id === id);
+                cart.push({ ...prod, qty: 1 });
+            }
+            saveState();
+            updateCartCount();
+            showToast("تمت الإضافة إلى السلة");
+        }
+
+        function updateCartCount() {
+            document.getElementById('cart-count').innerText = cart.reduce((sum, i) => sum + (i.qty || 1), 0);
+        }
+
+        // ---- نافذة السلة ----
+        function toggleCart() {
+            if(cart.length === 0) return showToast('السلة فارغة!');
+            openCartModal();
+        }
+
+        function openCartModal() {
+            const modal = document.getElementById('cart-modal');
+            modal.style.display = "flex";
+            renderCartItems();
+        }
+        function closeCartModal() {
+            document.getElementById('cart-modal').style.display = "none";
+        }
+
+        function renderCartItems() {
+            const box = document.getElementById('cart-items');
+            if(cart.length === 0) { box.innerHTML = `<p>السلة فارغة</p>`; return;}
+            box.innerHTML = cart.map((item, idx) => `
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold">${item.name}</span>
+                        <span class="text-sm gold-color">${item.price} ر.ي</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button onclick="decreaseQty(${item.id})" class="bg-gray-700 w-6 h-6 rounded-full text-white flex items-center justify-center">-</button>
+                        <span>${item.qty}</span>
+                        <button onclick="increaseQty(${item.id})" class="bg-gray-700 w-6 h-6 rounded-full text-white flex items-center justify-center">+</button>
+                        <button onclick="removeFromCart(${item.id})" class="text-red-500 ml-1" title="حذف">✖</button>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('cart-total').innerText =
+                cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+        }
+
+        function increaseQty(id) {
+            const idx = cart.findIndex(item => item.id === id);
+            if(idx > -1) cart[idx].qty++;
+            saveState(); renderCartItems(); updateCartCount();
+        }
+        function decreaseQty(id) {
+            const idx = cart.findIndex(item => item.id === id);
+            if(idx > -1 && cart[idx].qty > 1) cart[idx].qty--;
+            else if(idx > -1) cart.splice(idx,1);
+            saveState(); renderCartItems(); updateCartCount();
+        }
+        function removeFromCart(id) {
+            cart = cart.filter(i => i.id !== id);
+            saveState(); renderCartItems(); updateCartCount();
+        }
+        function emptyCart() {
+            cart = [];
+            saveState(); renderCartItems(); updateCartCount();
+        }
+
+        function confirmOrder() {
+            if(cart.length === 0) { showToast('سلتك فارغة!'); return; }
+            let msg = `طلب جديد من ${selectedBranch}\n\n`;
+            cart.forEach(i => msg += `* ${i.name} x${i.qty} - ${(i.price * i.qty)} ر.ي\n`);
+            window.open(`https://wa.me/${CONFIG.branches[selectedBranch]}?text=${encodeURIComponent(msg)}`);
+            //لا نفرغ السلة تلقائياً بعد الطلب
+        }
+
+        // نافذة Toast بسيطة للتنبيه
+        function showToast(text) {
+            let toast = document.getElementById('toast-note');
+            if(!toast) {
+                toast = document.createElement('div');
+                toast.id = 'toast-note';
+                toast.style.position = 'fixed';
+                toast.style.bottom = '20px';
+                toast.style.right = '20px';
+                toast.style.background = '#d4af37';
+                toast.style.color = '#000';
+                toast.style.padding = '10px 24px';
+                toast.style.borderRadius = '16px';
+                toast.style.zIndex = 9999;
+                document.body.appendChild(toast);
+            }
+            toast.innerHTML = text;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 1800);
+        }
+
+        // حفظ تلقائي عند تغييرات أو خروج الصفحة
+        window.addEventListener('beforeunload', saveState);
+        // بدء التطبيق بعد جاهزية الصفحة
+        window.onload = init;
+    </script>
 </body>
 </html>
