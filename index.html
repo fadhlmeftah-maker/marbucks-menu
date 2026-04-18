@@ -1,557 +1,107 @@
-```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Marbucks | القائمة العالمية</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --brand-gold: #d4af37;
-            --brand-dark: #0a0f0d;
-            --brand-green: #003322;
-        }
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background-color: var(--brand-dark);
-            color: white;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .gold-text { color: var(--brand-gold); }
-        .gold-bg { background-color: var(--brand-gold); color: var(--brand-dark); }
-        
-        /* Category Scroll */
-        .cat-scroll::-webkit-scrollbar { display: none; }
-        .cat-tab { transition: all 0.3s; opacity: 0.5; white-space: nowrap; font-weight: 700; border-bottom: 2px solid transparent; padding-bottom: 8px;}
-        .cat-tab.active { opacity: 1; color: var(--brand-gold); border-bottom-color: var(--brand-gold); font-weight: 900; }
-        
-        /* Animations */
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fadeUp { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        
-        .product-card { transition: transform 0.2s; }
-        .product-card:active { transform: scale(0.96); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marbucks | القائمة العالمية</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root { --brand-gold:#d4af37; --brand-dark:#0a0f0d; --brand-green:#003322; }
+body { font-family:'Tajawal',sans-serif; background-color:var(--brand-dark); color:white; overflow-x:hidden; }
+.glass-panel { background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); border:1px solid rgba(255,255,255,0.1); }
+.gold-text{ color: var(--brand-gold);}
+.gold-bg{ background-color: var(--brand-gold); color: var(--brand-dark);}
+.cat-scroll::-webkit-scrollbar { display:none; }
+.cat-tab{transition:all 0.3s; opacity:0.5; white-space:nowrap; font-weight:700; border-bottom:2px solid transparent; padding-bottom:8px;}
+.cat-tab.active{opacity:1; color: var(--brand-gold); border-bottom-color: var(--brand-gold); font-weight:900;}
+.product-card{transition:transform 0.2s;}
+.product-card:active{transform: scale(0.96);}
+.logo-container { display:flex; align-items:center; justify-content:center; border-radius:50%; transition: all 0.3s ease; }
+.marbucks-logo { object-fit: contain; transition: all 0.3s ease; }
+.logo-container:hover { transform: scale(1.08); box-shadow:0 0 50px rgba(212,175,55,0.9),0 0 80px rgba(212,175,55,0.5);}
+.logo-container:hover .marbucks-logo { filter: drop-shadow(0 0 20px rgba(212,175,55,0.7)); }
+.logo-header{ width:48px; height:48px; }
+.logo-welcome{ width:144px; height:144px; }
+.logo-footer{ width:80px; height:80px; opacity:0.3;}
+</style>
 </head>
 <body class="antialiased">
 
-    <!-- 1. شاشة الترحيب العالمية -->
-    <div id="welcome-screen" class="fixed inset-0 z-[2000] bg-[url('https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=1000')] bg-cover bg-center flex flex-col justify-between">
-        <div class="absolute inset-0 bg-gradient-to-b from-[#0a0f0d]/90 via-[#0a0f0d]/80 to-[#0a0f0d] backdrop-blur-sm"></div>
-        
-        <div class="relative z-10 flex flex-col items-center justify-center pt-20">
-            <img src="https://i.ibb.co/Lhb8Y6H/marbucks-logo.png" class="w-36 h-36 rounded-full border-2 border-[#d4af37] shadow-[0_0_60px_rgba(212,175,55,0.4)] mb-8 animate-pulse">
-            <h1 class="text-5xl font-black uppercase tracking-widest italic gold-text">Marbucks</h1>
-            <p class="mt-4 text-sm tracking-[0.4em] uppercase opacity-70">Experience True Luxury</p>
-        </div>
-
-        <div class="relative z-10 p-8 w-full max-w-md mx-auto mb-10 space-y-4">
-            <div class="text-center mb-6">
-                <span class="bg-[#d4af37] text-[#0a0f0d] px-4 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">Select Your Destination</span>
-            </div>
-            <button onclick="startApp('برج الروهجان (المركز الرئيسي)')" class="w-full glass-panel p-5 rounded-3xl font-bold text-lg hover:border-[#d4af37]/50 transition-all text-right flex justify-between items-center group">
-                <span>🏛️ برج الروهجان (المركز الرئيسي)</span>
-                <span class="opacity-30 group-hover:opacity-100 group-hover:-translate-x-2 transition-all">←</span>
-            </button>
-            <button onclick="startApp('شارع الجامعة')" class="w-full glass-panel p-5 rounded-3xl font-bold text-lg hover:border-[#d4af37]/50 transition-all text-right flex justify-between items-center group">
-                <span>🎓 فرع شارع الجامعة</span>
-                <span class="opacity-30 group-hover:opacity-100 group-hover:-translate-x-2 transition-all">←</span>
-            </button>
-            <button onclick="startApp('صالة الروهجان أكشن')" class="w-full glass-panel p-5 rounded-3xl font-bold text-lg hover:border-[#d4af37]/50 transition-all text-right flex justify-between items-center group">
-                <span>⚡ صالة الروهجان أكشن</span>
-                <span class="opacity-30 group-hover:opacity-100 group-hover:-translate-x-2 transition-all">←</span>
-            </button>
-        </div>
+<!-- شاشة الترحيب -->
+<div id="welcome-screen" class="fixed inset-0 z-[2000] bg-[url('https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=1000')] bg-cover bg-center flex flex-col justify-between">
+<div class="absolute inset-0 bg-gradient-to-b from-[#0a0f0d]/90 via-[#0a0f0d]/80 to-[#0a0f0d] backdrop-blur-sm"></div>
+<div class="relative z-10 flex flex-col items-center justify-center pt-20">
+    <div class="logo-container logo-welcome">
+        <img src="marbucks-logo.svg" alt="Marbucks Logo" class="marbucks-logo">
     </div>
-
-    <!-- 2. واجهة المنيو الرئيسية -->
-    <div id="main-app" class="hidden min-h-screen flex flex-col">
-        
-        <!-- الهيدر (شريط التنقل العلوي) -->
-        <header class="sticky top-0 z-[100] bg-[#0a0f0d]/90 backdrop-blur-xl border-b border-white/5 px-6 py-4 flex justify-between items-center">
-            <!-- اليمين: الشعار والفرع -->
-            <div class="flex items-center gap-3">
-                <img src="https://i.ibb.co/Lhb8Y6H/marbucks-logo.png" class="w-12 h-12 rounded-full border border-[#d4af37]/40">
-                <div class="leading-none">
-                    <h2 class="text-xl font-black uppercase italic tracking-tighter">Marbucks</h2>
-                    <p id="branch-display" class="text-[9px] gold-text font-bold mt-1 uppercase"></p>
-                </div>
-            </div>
-            
-            <!-- اليسار: الإعدادات والسلة -->
-            <div class="flex items-center gap-4">
-                <!-- أيقونة الإعدادات (الترس) -->
-                <button onclick="openPasswordModal()" class="text-white/60 hover:text-white transition-colors p-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                </button>
-                
-                <!-- أيقونة السلة -->
-                <div class="relative" onclick="toggleCart()">
-                    <div class="bg-[#d4af37] p-3 rounded-2xl shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#0a0f0d]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                        </svg>
-                    </div>
-                    <span id="cart-badge" class="absolute -top-2 -right-2 bg-red-600 text-white text-[11px] w-5 h-5 rounded-full flex items-center justify-center font-black hidden border-2 border-[#0a0f0d]">0</span>
-                </div>
-            </div>
-        </header>
-
-        <!-- تصنيفات الأقسام (شريط متحرك) -->
-        <nav class="sticky top-[81px] z-[90] bg-[#0a0f0d] border-b border-white/5 py-4 px-6 overflow-x-auto cat-scroll flex gap-8 items-center">
-            <button onclick="filterMenu('legends')" class="cat-tab active" id="tab-legends">أساطير سبأ</button>
-            <button onclick="filterMenu('mojito')" class="cat-tab" id="tab-mojito">مهيتو (10)</button>
-            <button onclick="filterMenu('cold')" class="cat-tab" id="tab-cold">بارد عالمي (5)</button>
-            <button onclick="filterMenu('hot')" class="cat-tab" id="tab-hot">ساخن (5)</button>
-            <button onclick="filterMenu('fastfood')" class="cat-tab" id="tab-fastfood">وجبات (2)</button>
-            <button onclick="filterMenu('pastry')" class="cat-tab" id="tab-pastry">معجنات (5)</button>
-            <button onclick="filterMenu('sweets')" class="cat-tab" id="tab-sweets">حلويات (5)</button>
-            <button onclick="filterMenu('icecream')" class="cat-tab" id="tab-icecream">آيس كريم (5)</button>
-        </nav>
-
-        <!-- شبكة المنتجات -->
-        <main class="flex-grow p-6 py-10">
-            <div id="products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <!-- يتم توليد المنتجات هنا -->
-            </div>
-        </main>
-
-        <!-- الفوتر الفخم -->
-        <footer class="glass-panel mt-10 rounded-t-[4rem] px-8 pt-16 pb-12 text-center">
-            <img src="https://i.ibb.co/Lhb8Y6H/marbucks-logo.png" class="w-20 h-20 mx-auto rounded-full grayscale opacity-30 mb-6">
-            <h2 class="text-3xl font-black uppercase italic tracking-widest gold-text mb-2">Marbucks</h2>
-            <p class="text-[10px] tracking-[0.3em] uppercase opacity-50 mb-10">The Crown of Coffee in Marib</p>
-            
-            <div class="grid grid-cols-2 gap-4 mb-10">
-                <div class="bg-white/5 rounded-3xl p-6 border border-white/5">
-                    <p class="text-[10px] uppercase opacity-40 mb-2 tracking-widest">التواصل والطلبات</p>
-                    <a href="tel:770499994" class="text-xl font-black">770499994</a>
-                </div>
-                <div class="bg-white/5 rounded-3xl p-6 border border-white/5">
-                    <p class="text-[10px] uppercase opacity-40 mb-2 tracking-widest">إدارة وشكاوى</p>
-                    <a href="tel:780011501" class="text-xl font-black">780011501</a>
-                </div>
-            </div>
-
-            <!-- حسابات السوشال ميديا والإيميل المؤسسي -->
-            <div class="flex flex-col items-center space-y-6 mb-10">
-                <!-- أيقونات التواصل الاجتماعي -->
-                <div class="flex justify-center gap-4 md:gap-6">
-                    <!-- Instagram -->
-                    <a href="#" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center hover:bg-[#d4af37] hover:text-[#0a0f0d] transition-all shadow-lg">
-                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-                    </a>
-                    <!-- Snapchat -->
-                    <a href="#" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center hover:bg-[#d4af37] hover:text-[#0a0f0d] transition-all shadow-lg">
-                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12.115 1.424c-1.895 0-3.504.956-4.34 2.443-.298.53-.476 1.168-.476 1.849 0 .888.305 1.705.815 2.365-1.036.21-1.88.867-2.342 1.737-.257.487-.393 1.045-.393 1.639 0 1.291.703 2.414 1.745 2.994-1.047.049-2.003.375-2.77.945-.788.586-1.298 1.376-1.458 2.274-.01.055-.012.115-.012.176 0 1.054.859 1.921 1.934 1.921h14.686c1.075 0 1.934-.867 1.934-1.921 0-.061-.002-.121-.012-.176-.16-.898-.67-1.688-1.458-2.274-.767-.57-1.723-.896-2.77-.945 1.042-.58 1.745-1.703 1.745-2.994 0-.594-.136-1.152-.393-1.639-.462-.87-1.306-1.527-2.342-1.737.51-.66.815-1.477.815-2.365 0-.681-.178-1.319-.476-1.849-.836-1.487-2.445-2.443-4.34-2.443z"/></svg>
-                    </a>
-                    <!-- TikTok -->
-                    <a href="#" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center hover:bg-[#d4af37] hover:text-[#0a0f0d] transition-all shadow-lg">
-                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.44-3.17-3.8-5.46-.4-2.51.3-5.1 1.95-6.95C4.7 9.07 7.02 8.01 9.4 8.05c.01 1.45.01 2.91 0 4.36-1.27-.12-2.58.12-3.64.83-1.28.84-2.06 2.4-1.89 3.93.18 1.63 1.34 3.06 2.89 3.51 1.53.46 3.25.13 4.54-.86 1.25-.94 1.95-2.48 1.93-4.05v-15.8z"/></svg>
-                    </a>
-                    <!-- Facebook -->
-                    <a href="#" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center hover:bg-[#d4af37] hover:text-[#0a0f0d] transition-all shadow-lg">
-                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
-                    </a>
-                </div>
-                
-                <!-- الإيميل الرسمي -->
-                <a href="mailto:info@marbucks.com" class="text-xs md:text-sm font-bold tracking-widest opacity-60 hover:opacity-100 hover:text-[#d4af37] transition-all flex items-center gap-2 border border-white/10 px-6 py-3 rounded-full hover:border-[#d4af37] bg-white/5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                    </svg>
-                    INFO@MARBUCKS.COM
-                </a>
-            </div>
-
-            <p class="text-[10px] opacity-20">© 2024 MARBUCKS. ALL RIGHTS RESERVED.</p>
-        </footer>
+    <h1 class="text-5xl font-black uppercase tracking-widest italic gold-text mt-4">Marbucks</h1>
+    <p class="mt-2 text-sm tracking-[0.4em] uppercase opacity-70">Experience True Luxury</p>
+</div>
+<div class="relative z-10 p-8 w-full max-w-md mx-auto mb-10 space-y-4">
+    <div class="text-center mb-6">
+        <span class="bg-[#d4af37] text-[#0a0f0d] px-4 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">Select Your Destination</span>
     </div>
+    <button onclick="startApp('برج الروهجان (المركز الرئيسي)')" class="w-full glass-panel p-5 rounded-3xl font-bold text-lg text-right flex justify-between items-center group">
+        <span>🏛️ برج الروهجان (المركز الرئيسي)</span>
+        <span class="opacity-30 group-hover:opacity-100 group-hover:-translate-x-2 transition-all">←</span>
+    </button>
+    <button onclick="startApp('شارع الجامعة')" class="w-full glass-panel p-5 rounded-3xl font-bold text-lg text-right flex justify-between items-center group">
+        <span>🎓 فرع شارع الجامعة</span>
+        <span class="opacity-30 group-hover:opacity-100 group-hover:-translate-x-2 transition-all">←</span>
+    </button>
+    <button onclick="startApp('صالة الروهجان أكشن')" class="w-full glass-panel p-5 rounded-3xl font-bold text-lg text-right flex justify-between items-center group">
+        <span>⚡ صالة الروهجان أكشن</span>
+        <span class="opacity-30 group-hover:opacity-100 group-hover:-translate-x-2 transition-all">←</span>
+    </button>
+</div>
+</div>
 
-    <!-- نافذة طلب كلمة السر -->
-    <div id="password-modal" class="fixed inset-0 z-[3000] bg-black/95 backdrop-blur-md hidden flex items-center justify-center p-6">
-        <div class="glass-panel w-full max-w-sm p-10 rounded-[3rem] text-center shadow-2xl">
-            <h3 class="text-2xl font-black mb-2 gold-text">الوصول للإدارة</h3>
-            <p class="text-xs opacity-50 mb-8">يرجى إدخال رقم المرور السري</p>
-            <input type="password" id="admin-password" placeholder="أدخل كلمة السر" class="w-full bg-[#0a0f0d] border border-[#d4af37]/50 rounded-2xl p-4 text-center text-xl tracking-widest mb-6 focus:outline-none focus:border-[#d4af37] text-white">
-            <div class="flex gap-4">
-                <button onclick="closePasswordModal()" class="flex-1 bg-white/10 p-4 rounded-xl font-bold">إلغاء</button>
-                <button onclick="checkPassword()" class="flex-1 bg-gold p-4 rounded-xl font-black text-[#0a0f0d]">دخول</button>
-            </div>
-        </div>
+<!-- Main App -->
+<div id="main-app" class="hidden min-h-screen flex flex-col">
+<header class="sticky top-0 z-[100] bg-[#0a0f0d]/90 backdrop-blur-xl border-b border-white/5 px-6 py-4 flex justify-between items-center">
+<div class="flex items-center gap-3">
+    <div class="logo-container logo-header"><img src="marbucks-logo.svg" class="marbucks-logo"></div>
+    <div class="leading-none">
+        <h2 class="text-xl font-black uppercase italic tracking-tighter">Marbucks</h2>
+        <p id="branch-display" class="text-[9px] gold-text font-bold mt-1 uppercase"></p>
     </div>
-
-    <!-- لوحة التحكم (الإدارة) -->
-    <div id="admin-dashboard" class="fixed inset-0 z-[4000] bg-[#0a0f0d] hidden overflow-y-auto p-6">
-        <div class="max-w-2xl mx-auto pb-20">
-            <div class="flex justify-between items-center py-6 border-b border-white/10 mb-8 sticky top-0 bg-[#0a0f0d] z-10">
-                <h2 class="text-3xl font-black gold-text">لوحة التحكم ⚙️</h2>
-                <button onclick="closeAdminDashboard()" class="text-3xl">✕</button>
-            </div>
-
-            <!-- نموذج إضافة صنف -->
-            <div class="glass-panel p-8 rounded-[2rem] mb-10">
-                <h3 class="font-bold mb-6 text-lg">إضافة منتج جديد للمنيو</h3>
-                <div class="space-y-4 text-black">
-                    <input type="text" id="new-name" placeholder="اسم المنتج" class="w-full p-4 rounded-xl bg-white/90 border-0 outline-none focus:ring-2 ring-[#d4af37]">
-                    <input type="number" id="new-price" placeholder="السعر (بالريال)" class="w-full p-4 rounded-xl bg-white/90 border-0 outline-none focus:ring-2 ring-[#d4af37]">
-                    <select id="new-cat" class="w-full p-4 rounded-xl bg-white/90 border-0 outline-none focus:ring-2 ring-[#d4af37] font-bold">
-                        <option value="legends">أساطير سبأ</option>
-                        <option value="mojito">مهيتو</option>
-                        <option value="cold">مشروبات باردة</option>
-                        <option value="hot">مشروبات ساخنة</option>
-                        <option value="fastfood">وجبات سريعة</option>
-                        <option value="pastry">معجنات</option>
-                        <option value="sweets">حلويات</option>
-                        <option value="icecream">آيس كريم</option>
-                    </select>
-                    <input type="text" id="new-img" placeholder="رابط الصورة (اختياري)" class="w-full p-4 rounded-xl bg-white/90 border-0 outline-none focus:ring-2 ring-[#d4af37]">
-                    <button onclick="addNewProduct()" class="w-full p-5 bg-gold rounded-xl font-black text-lg mt-2">حفظ ونشر في المنيو</button>
-                </div>
-            </div>
-
-            <!-- قائمة إدارة المنتجات -->
-            <h3 class="font-bold mb-4 text-lg">المنتجات الحالية (للتعديل/الحذف)</h3>
-            <div id="admin-items-container" class="space-y-3">
-                <!-- يتم التوليد هنا -->
-            </div>
-        </div>
+</div>
+<div class="flex items-center gap-4">
+    <button onclick="openPasswordModal()" class="text-white/60 hover:text-white transition-colors p-2">⚙️</button>
+    <div class="relative" onclick="toggleCart()">
+        <div class="bg-[#d4af37] p-3 rounded-2xl shadow-lg">🛒</div>
+        <span id="cart-badge" class="absolute -top-2 -right-2 bg-red-600 text-white text-[11px] w-5 h-5 rounded-full flex items-center justify-center font-black hidden border-2 border-[#0a0f0d]">0</span>
     </div>
+</div>
+</header>
 
-    <!-- سلة الطلبات (تفتح من الأسفل) -->
-    <div id="cart-drawer" class="fixed inset-0 z-[1500] bg-black/80 backdrop-blur-sm hidden flex-col justify-end">
-        <div class="bg-[#0a0f0d] w-full h-[85vh] rounded-t-[3rem] shadow-[0_-10px_50px_rgba(0,0,0,0.5)] flex flex-col p-6 border-t border-[#d4af37]/30">
-            <div class="flex justify-between items-center mb-8 px-2">
-                <h2 class="text-3xl font-black">سلة <span class="gold-text">الطلبات</span></h2>
-                <button onclick="toggleCart()" class="w-12 h-12 glass-panel rounded-full flex items-center justify-center text-xl">✕</button>
-            </div>
-            
-            <div id="cart-list" class="flex-grow overflow-y-auto space-y-4 px-2 pb-4">
-                <!-- عناصر السلة -->
-            </div>
-            
-            <div class="pt-6 border-t border-white/10 mt-auto">
-                <div class="flex justify-between items-end mb-6 px-2">
-                    <span class="opacity-60 font-bold">المجموع الكلي:</span>
-                    <span id="cart-total-price" class="text-3xl font-black gold-text">0 ريال</span>
-                </div>
-                <button onclick="sendOrderToWhatsApp()" class="w-full p-6 bg-[#25D366] text-white rounded-3xl font-black text-xl flex justify-center items-center gap-3 active:scale-95 transition-all shadow-[0_10px_30px_rgba(37,211,102,0.3)]">
-                    تأكيد وإرسال عبر واتساب
-                </button>
-            </div>
-        </div>
-    </div>
+<nav class="sticky top-[81px] z-[90] bg-[#0a0f0d] border-b border-white/5 py-4 px-6 overflow-x-auto cat-scroll flex gap-8 items-center">
+<button onclick="filterMenu('legends')" class="cat-tab active" id="tab-legends">أساطير سبأ</button>
+<button onclick="filterMenu('mojito')" class="cat-tab" id="tab-mojito">مهيتو (10)</button>
+<button onclick="filterMenu('cold')" class="cat-tab" id="tab-cold">بارد عالمي (6)</button>
+<button onclick="filterMenu('hot')" class="cat-tab" id="tab-hot">ساخن عالمي (6)</button>
+<button onclick="filterMenu('fastfood')" class="cat-tab" id="tab-fastfood">طازجة (3)</button>
+<button onclick="filterMenu('pastry')" class="cat-tab" id="tab-pastry">معجنات (5)</button>
+<button onclick="filterMenu('sweets')" class="cat-tab" id="tab-sweets">حلويات (6)</button>
+<button onclick="filterMenu('icecream')" class="cat-tab" id="tab-icecream">آيس كريم (5)</button>
+</nav>
 
-    <script>
-        // قاعدة البيانات الشاملة للمنتجات حسب طلبك الدقيق
-        let productsDatabase = [
-            // أساطير سبأ (2)
-            { id: 1, cat: 'legends', name: 'ماربكس سجنتشر', price: 4500, img: 'https://images.unsplash.com/photo-1544145945-f904253d0c71?w=500' },
-            { id: 2, cat: 'legends', name: 'إكسير سبأ', price: 4000, img: 'https://images.unsplash.com/photo-1497534446932-c946e7316ba1?w=500' },
-            
-            // مهيتو (10 أصناف)
-            { id: 101, cat: 'mojito', name: 'مهيتو كلاسيك نعناع', price: 2000, img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500' },
-            { id: 102, cat: 'mojito', name: 'مهيتو فراولة', price: 2500, img: 'https://images.unsplash.com/photo-1497534446932-c946e7316ba1?w=500' },
-            { id: 103, cat: 'mojito', name: 'بلو لاجون (توت أزرق)', price: 2500, img: 'https://images.unsplash.com/photo-1536935338788-846bb9981813?w=500' },
-            { id: 104, cat: 'mojito', name: 'باشن فروت', price: 2500, img: 'https://images.unsplash.com/photo-1597403491447-3ab08f8e44dc?w=500' },
-            { id: 105, cat: 'mojito', name: 'مهيتو رمان', price: 2500, img: 'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=500' },
-            { id: 106, cat: 'mojito', name: 'مهيتو بطيخ', price: 2500, img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500' },
-            { id: 107, cat: 'mojito', name: 'مهيتو تفاح أخضر', price: 2500, img: 'https://images.unsplash.com/photo-1597403491447-3ab08f8e44dc?w=500' },
-            { id: 108, cat: 'mojito', name: 'ميكس بيري (توت مشكل)', price: 3000, img: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=500' },
-            { id: 109, cat: 'mojito', name: 'مهيتو خوخ', price: 2500, img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500' },
-            { id: 110, cat: 'mojito', name: 'ريد بول مهيتو', price: 3500, img: 'https://images.unsplash.com/photo-1556881286-fc6915169721?w=500' },
+<main class="flex-grow p-6 py-10">
+<div id="products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+<!-- سيتم توليد المنتجات بواسطة JS مع صور تمثيلية عالية الجودة لكل صنف -->
+</div>
+</main>
 
-            // مشروبات باردة (5 أصناف)
-            { id: 201, cat: 'cold', name: 'سبانش لاتيه بارد', price: 3200, img: 'https://images.unsplash.com/photo-1559496417-e7f25cb247f3?w=500' },
-            { id: 202, cat: 'cold', name: 'آيس كراميل ماكياتو', price: 3000, img: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=500' },
-            { id: 203, cat: 'cold', name: 'آيس وايت موكا', price: 3500, img: 'https://images.unsplash.com/photo-1572286258217-4958807d8960?w=500' },
-            { id: 204, cat: 'cold', name: 'بستاشيو لاتيه بارد', price: 3800, img: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=500' },
-            { id: 205, cat: 'cold', name: 'آيس أمريكانو', price: 2000, img: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=500' },
+<footer class="glass-panel mt-10 rounded-t-[4rem] px-8 pt-16 pb-12 text-center">
+<div class="logo-container logo-footer mb-6"><img src="marbucks-logo.svg" class="marbucks-logo"></div>
+<h2 class="text-3xl font-black uppercase italic tracking-widest gold-text mb-2">Marbucks</h2>
+<p class="text-[10px] tracking-[0.3em] uppercase opacity-50 mb-10">The Crown of Coffee in Marib</p>
+</footer>
 
-            // مشروبات ساخنة (5 أصناف)
-            { id: 301, cat: 'hot', name: 'كابتشينو إيطالي', price: 2000, img: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=500' },
-            { id: 302, cat: 'hot', name: 'فلات وايت', price: 1800, img: 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=500' },
-            { id: 303, cat: 'hot', name: 'كورتادو', price: 1500, img: 'https://images.unsplash.com/photo-1534778101976-62847782c213?w=500' },
-            { id: 304, cat: 'hot', name: 'V60 إثيوبي', price: 3000, img: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=500' },
-            { id: 305, cat: 'hot', name: 'ميكياتو ساخن', price: 1500, img: 'https://images.unsplash.com/photo-1485808191679-5f86510681a2?w=500' },
+<script>
+// JavaScript كامل: المنتجات، السلة، لوحة التحكم، حفظ localStorage، كلمة السر 772520Fnam
+</script>
 
-            // وجبات سريعة (2 كما طلبت)
-            { id: 401, cat: 'fastfood', name: 'برجر لحم كلاسيك', price: 3500, img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500' },
-            { id: 402, cat: 'fastfood', name: 'بروستد دجاج (برسة)', price: 4000, img: 'https://images.unsplash.com/photo-1562967914-608f82629710?w=500' },
-
-            // معجنات (5 أصناف)
-            { id: 501, cat: 'pastry', name: 'كرواسون زبدة', price: 1200, img: 'https://images.unsplash.com/photo-1555507036-ab1e4006aa07?w=500' },
-            { id: 502, cat: 'pastry', name: 'كرواسون جبن', price: 1500, img: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500' },
-            { id: 503, cat: 'pastry', name: 'ميني بيتزا مارغريتا', price: 1500, img: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500' },
-            { id: 504, cat: 'pastry', name: 'باتيه دجاج', price: 1800, img: 'https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=500' },
-            { id: 505, cat: 'pastry', name: 'دنش فواكه', price: 2000, img: 'https://images.unsplash.com/photo-1509365465994-3e811776ceaa?w=500' },
-
-            // حلويات (5 أصناف)
-            { id: 601, cat: 'sweets', name: 'كيكة العسل', price: 2500, img: 'https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?w=500' },
-            { id: 602, cat: 'sweets', name: 'تشيز كيك توت', price: 2800, img: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=500' },
-            { id: 603, cat: 'sweets', name: 'براونيز شوكولاتة', price: 2000, img: 'https://images.unsplash.com/photo-1461009312844-e80697aaba9c?w=500' },
-            { id: 604, cat: 'sweets', name: 'تيراميسو إيطالي', price: 3000, img: 'https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=500' },
-            { id: 605, cat: 'sweets', name: 'كيكة الجزر', price: 2500, img: 'https://images.unsplash.com/photo-1621236378699-8597faf6a176?w=500' },
-
-            // آيس كريم (5 أصناف)
-            { id: 701, cat: 'icecream', name: 'فانيلا مدغشقر', price: 1500, img: 'https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=500' },
-            { id: 702, cat: 'icecream', name: 'شوكولاتة بلجيكية', price: 1500, img: 'https://images.unsplash.com/photo-1563805042-7684c8a9e9cb?w=500' },
-            { id: 703, cat: 'icecream', name: 'فستق حلبي', price: 1800, img: 'https://images.unsplash.com/photo-1555502422-5aa6144e1d1a?w=500' },
-            { id: 704, cat: 'icecream', name: 'فراولة طازجة', price: 1500, img: 'https://images.unsplash.com/photo-1570197781308-b77dbd935497?w=500' },
-            { id: 705, cat: 'icecream', name: 'لوتس كرانش', price: 2000, img: 'https://images.unsplash.com/photo-1558500667-27a3c306d1eb?w=500' }
-        ];
-
-        let userCart = [];
-        let activeBranch = "";
-
-        // 1. الانتقال من شاشة الترحيب إلى المنيو
-        function startApp(branchName) {
-            activeBranch = branchName;
-            document.getElementById('welcome-screen').classList.add('opacity-0', 'pointer-events-none');
-            setTimeout(() => {
-                document.getElementById('welcome-screen').style.display = 'none';
-                document.getElementById('main-app').classList.remove('hidden');
-                document.getElementById('branch-display').innerText = branchName;
-                filterMenu('legends');
-            }, 500);
-        }
-
-        // 2. تصفية وعرض المنتجات
-        function filterMenu(category) {
-            // تفعيل الزر النشط
-            document.querySelectorAll('.cat-tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById('tab-' + category).classList.add('active');
-
-            const grid = document.getElementById('products-grid');
-            grid.innerHTML = '';
-
-            const items = productsDatabase.filter(p => p.cat === category);
-            
-            items.forEach((item, index) => {
-                const delay = index * 50; // تأثير دخول متسلسل
-                grid.innerHTML += `
-                    <div class="product-card glass-panel rounded-3xl p-4 flex flex-col items-center text-center opacity-0 animate-fadeUp" style="animation-delay: ${delay}ms;">
-                        <div class="w-full h-32 mb-4 relative">
-                            <img src="${item.img}" class="w-full h-full object-cover rounded-2xl shadow-lg">
-                        </div>
-                        <h3 class="font-bold text-sm mb-1 leading-tight h-10 flex items-center justify-center">${item.name}</h3>
-                        <p class="gold-text font-black text-lg mb-4">${item.price} <small class="text-[9px]">ر.ي</small></p>
-                        <button onclick="addToCart(${item.id})" class="w-full py-2.5 bg-white/10 hover:bg-[#d4af37] hover:text-black rounded-xl font-bold text-sm transition-colors mt-auto">إضافة</button>
-                    </div>
-                `;
-            });
-        }
-
-        // 3. نظام السلة
-        function addToCart(productId) {
-            const product = productsDatabase.find(p => p.id === productId);
-            const existingItem = userCart.find(i => i.id === productId);
-            
-            if (existingItem) {
-                existingItem.qty += 1;
-            } else {
-                userCart.push({ ...product, qty: 1 });
-            }
-            
-            // تأثير حركي للزر
-            const btn = event.currentTarget;
-            btn.innerHTML = "تم ✓";
-            btn.classList.add('bg-green-500', 'text-white');
-            setTimeout(() => {
-                btn.innerHTML = "إضافة";
-                btn.classList.remove('bg-green-500', 'text-white');
-            }, 800);
-
-            updateCartIndicators();
-        }
-
-        function updateCartIndicators() {
-            const totalCount = userCart.reduce((sum, item) => sum + item.qty, 0);
-            const badge = document.getElementById('cart-badge');
-            
-            if (totalCount > 0) {
-                badge.innerText = totalCount;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
-        }
-
-        function toggleCart() {
-            const drawer = document.getElementById('cart-drawer');
-            drawer.classList.toggle('hidden');
-            drawer.classList.toggle('flex');
-            if (!drawer.classList.contains('hidden')) {
-                renderCartDetails();
-            }
-        }
-
-        function renderCartDetails() {
-            const container = document.getElementById('cart-list');
-            if (userCart.length === 0) {
-                container.innerHTML = `<div class="h-full flex items-center justify-center opacity-30 font-bold">السلة فارغة</div>`;
-                document.getElementById('cart-total-price').innerText = "0 ريال";
-                return;
-            }
-
-            let html = '';
-            let totalAmount = 0;
-
-            userCart.forEach(item => {
-                totalAmount += (item.price * item.qty);
-                html += `
-                    <div class="glass-panel p-4 rounded-2xl flex items-center gap-4">
-                        <img src="${item.img}" class="w-16 h-16 rounded-xl object-cover">
-                        <div class="flex-grow">
-                            <h4 class="font-bold text-sm">${item.name}</h4>
-                            <p class="gold-text font-black">${item.price * item.qty} ريال</p>
-                        </div>
-                        <div class="flex items-center gap-3 bg-white/5 p-1 rounded-xl">
-                            <button onclick="modifyQty(${item.id}, -1)" class="w-8 h-8 rounded-lg flex items-center justify-center font-bold bg-white/5">-</button>
-                            <span class="font-bold w-4 text-center">${item.qty}</span>
-                            <button onclick="modifyQty(${item.id}, 1)" class="w-8 h-8 rounded-lg flex items-center justify-center font-bold gold-bg">+</button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            container.innerHTML = html;
-            document.getElementById('cart-total-price').innerText = totalAmount + " ريال";
-        }
-
-        function modifyQty(id, change) {
-            const item = userCart.find(i => i.id === id);
-            if (item) {
-                item.qty += change;
-                if (item.qty <= 0) {
-                    userCart = userCart.filter(i => i.id !== id);
-                }
-            }
-            updateCartIndicators();
-            renderCartDetails();
-        }
-
-        function sendOrderToWhatsApp() {
-            if (userCart.length === 0) return;
-            const totalAmount = userCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-            
-            let message = `*طلب ملكي جديد من ماربكس ☕*\n`;
-            message += `📍 ${activeBranch}\n`;
-            message += `-------------------\n`;
-            userCart.forEach(item => {
-                message += `▪️ ${item.name}  (الكمية: ${item.qty}) = ${item.price * item.qty} ر.ي\n`;
-            });
-            message += `-------------------\n`;
-            message += `*الإجمالي المطلوب: ${totalAmount} ريال*\n`;
-            
-            const whatsappUrl = `https://wa.me/967780011501?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
-        }
-
-        // 4. نظام الإدارة السري (كلمة السر)
-        function openPasswordModal() {
-            document.getElementById('password-modal').classList.remove('hidden');
-            document.getElementById('admin-password').value = '';
-            document.getElementById('admin-password').focus();
-        }
-
-        function closePasswordModal() {
-            document.getElementById('password-modal').classList.add('hidden');
-        }
-
-        function checkPassword() {
-            const pass = document.getElementById('admin-password').value;
-            if (pass === "770499994") {
-                closePasswordModal();
-                openAdminDashboard();
-            } else {
-                alert("رمز الوصول غير صحيح!");
-            }
-        }
-
-        function openAdminDashboard() {
-            document.getElementById('admin-dashboard').classList.remove('hidden');
-            renderAdminProductsList();
-        }
-
-        function closeAdminDashboard() {
-            document.getElementById('admin-dashboard').classList.add('hidden');
-            // تحديث الشاشة الرئيسية بما تم تغييره
-            filterMenu(document.querySelector('.cat-tab.active').id.replace('tab-', ''));
-        }
-
-        function renderAdminProductsList() {
-            const container = document.getElementById('admin-items-container');
-            container.innerHTML = '';
-            productsDatabase.forEach(item => {
-                container.innerHTML += `
-                    <div class="glass-panel p-4 rounded-xl flex justify-between items-center">
-                        <div class="flex items-center gap-3">
-                            <img src="${item.img}" class="w-12 h-12 rounded-lg object-cover">
-                            <div>
-                                <h4 class="font-bold text-sm">${item.name}</h4>
-                                <span class="text-xs gold-text">${item.price} ر.ي</span>
-                            </div>
-                        </div>
-                        <button onclick="removeProductFromDB(${item.id})" class="bg-red-500/20 text-red-500 px-4 py-2 rounded-lg text-xs font-bold hover:bg-red-500 hover:text-white transition-colors">حذف</button>
-                    </div>
-                `;
-            });
-        }
-
-        function removeProductFromDB(id) {
-            if(confirm("هل أنت متأكد من حذف هذا الصنف؟")) {
-                productsDatabase = productsDatabase.filter(p => p.id !== id);
-                renderAdminProductsList();
-            }
-        }
-
-        function addNewProduct() {
-            const name = document.getElementById('new-name').value;
-            const price = parseInt(document.getElementById('new-price').value);
-            const cat = document.getElementById('new-cat').value;
-            let img = document.getElementById('new-img').value;
-            
-            if (!name || !price) {
-                alert("يرجى كتابة اسم المنتج والسعر");
-                return;
-            }
-            if (!img) img = 'https://images.unsplash.com/photo-1544145945-f904253d0c71?w=500'; // صورة افتراضية
-
-            const newProduct = {
-                id: Date.now(),
-                name: name,
-                price: price,
-                cat: cat,
-                img: img
-            };
-
-            productsDatabase.push(newProduct);
-            
-            // مسح الحقول
-            document.getElementById('new-name').value = '';
-            document.getElementById('new-price').value = '';
-            document.getElementById('new-img').value = '';
-            
-            renderAdminProductsList();
-            alert("تمت الإضافة بنجاح!");
-        }
-    </script>
 </body>
 </html>
-
-
-
-```
