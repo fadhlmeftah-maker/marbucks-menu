@@ -1,154 +1,214 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Marbucks | القائمة العالمية</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --brand-gold: #d4af37;
-            --brand-dark: #0a0f0d;
-            --brand-green: #003322;
-        }
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background-color: var(--brand-dark);
-            color: white;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .gold-text { color: var(--brand-gold); }
-        .gold-bg { background-color: var(--brand-gold); color: var(--brand-dark); }
-        .cat-scroll::-webkit-scrollbar { display: none; }
-        .cat-tab { transition: all 0.3s; opacity: 0.5; white-space: nowrap; font-weight: 700; border-bottom: 2px solid transparent; padding-bottom: 8px;}
-        .cat-tab.active { opacity: 1; color: var(--brand-gold); border-bottom-color: var(--brand-gold); font-weight: 900; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fadeUp { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .product-card { transition: transform 0.2s; }
-        .product-card:active { transform: scale(0.96); }
-    </style>
-</head>
-<body class="antialiased">
+<script type="module">
+/* =========================
+   🔥 إعداد Firebase
+========================= */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    deleteDoc,
+    doc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    <!-- شاشة الترحيب -->
-    <div id="welcome-screen" class="fixed inset-0 z-[2000] bg-[url('https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=1000')] bg-cover bg-center flex flex-col justify-between">
-        <div class="absolute inset-0 bg-gradient-to-b from-[#0a0f0d]/90 via-[#0a0f0d]/80 to-[#0a0f0d] backdrop-blur-sm"></div>
-        <div class="relative z-10 flex flex-col items-center justify-center pt-20">
-            <img src="images/marbucks-logo.png" class="w-36 h-36 rounded-full border-2 border-[#d4af37] shadow-[0_0_60px_rgba(212,175,55,0.4)] mb-8 animate-pulse">
-            <h1 class="text-5xl font-black uppercase tracking-widest italic gold-text">Marbucks</h1>
-            <p class="mt-4 text-sm tracking-[0.4em] uppercase opacity-70">Experience True Luxury</p>
+const firebaseConfig = {
+    apiKey: "PUT-YOUR-KEY",
+    authDomain: "PUT-YOUR-DOMAIN",
+    projectId: "PUT-YOUR-ID",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+/* =========================
+   🧠 الحالة العامة
+========================= */
+let productsDatabase = [];
+let userCart = [];
+let activeBranch = "";
+
+/* =========================
+   🚀 بدء التطبيق
+========================= */
+async function startApp(branchName) {
+    activeBranch = branchName;
+
+    document.getElementById('welcome-screen').classList.add('opacity-0', 'pointer-events-none');
+
+    setTimeout(async () => {
+        document.getElementById('welcome-screen').style.display = 'none';
+        document.getElementById('main-app').classList.remove('hidden');
+        document.getElementById('branch-display').innerText = branchName;
+
+        await loadProducts();
+    }, 400);
+}
+
+/* =========================
+   📥 تحميل المنتجات من Firebase
+========================= */
+async function loadProducts() {
+    try {
+        const snapshot = await getDocs(collection(db, "products"));
+
+        productsDatabase = [];
+
+        snapshot.forEach(docItem => {
+            productsDatabase.push({
+                id: docItem.id,
+                ...docItem.data()
+            });
+        });
+
+        filterMenu('legends');
+
+    } catch (err) {
+        console.error("خطأ في تحميل المنتجات:", err);
+    }
+}
+
+/* =========================
+   📂 عرض المنتجات حسب التصنيف
+========================= */
+function filterMenu(category) {
+    document.querySelectorAll('.cat-tab').forEach(tab => tab.classList.remove('active'));
+    document.getElementById('tab-' + category).classList.add('active');
+
+    const grid = document.getElementById('products-grid');
+    const items = productsDatabase.filter(p => p.cat === category);
+
+    let html = '';
+
+    items.forEach((item, index) => {
+        html += `
+        <div class="product-card glass-panel rounded-3xl p-4 flex flex-col items-center text-center opacity-0 animate-fadeUp" style="animation-delay:${index * 50}ms;">
+            <div class="w-full h-32 mb-4">
+                <img loading="lazy" src="${item.img}" class="w-full h-full object-cover rounded-2xl">
+            </div>
+            <h3 class="font-bold text-sm mb-1">${item.name}</h3>
+            <p class="gold-text font-black">${item.price} ر.ي</p>
+            <button onclick="addToCart('${item.id}')" class="w-full py-2 bg-white/10 rounded-xl mt-3">إضافة</button>
         </div>
-        <div class="relative z-10 p-8 w-full max-w-md mx-auto mb-10 space-y-4">
-            <div class="text-center mb-6">
-                <span class="bg-[#d4af37] text-[#0a0f0d] px-4 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">Select Your Destination</span>
-            </div>
-            <button onclick="startApp('برج الروهجان (المركز الرئيسي)')" class="w-full glass-panel p-5 rounded-3xl font-bold text-lg hover:border-[#d4af37]/50 transition-all text-right flex justify-between items-center group">
-                <span>🏛️ برج الروهجان (المركز الرئيسي)</span>
-                <span class="opacity-30 group-hover:opacity-100 group-hover:-translate-x-2 transition-all">←</span>
-            </button>
-            <button onclick="startApp('شارع الجامعة')" class="w-full glass-panel p-5 rounded-3xl font-bold text-lg hover:border-[#d4af37]/50 transition-all text-right flex justify-between items-center group">
-                <span>🎓 فرع شارع الجامعة</span>
-                <span class="opacity-30 group-hover:opacity-100 group-hover:-translate-x-2 transition-all">←</span>
-            </button>
-            <button onclick="startApp('صالة الروهجان أكشن')" class="w-full glass-panel p-5 rounded-3xl font-bold text-lg hover:border-[#d4af37]/50 transition-all text-right flex justify-between items-center group">
-                <span>⚡ صالة الروهجان أكشن</span>
-                <span class="opacity-30 group-hover:opacity-100 group-hover:-translate-x-2 transition-all">←</span>
-            </button>
+        `;
+    });
+
+    grid.innerHTML = html;
+}
+
+/* =========================
+   🛒 نظام السلة
+========================= */
+function addToCart(id) {
+    const product = productsDatabase.find(p => p.id == id);
+    const existing = userCart.find(i => i.id == id);
+
+    if (existing) {
+        existing.qty++;
+    } else {
+        userCart.push({ ...product, qty: 1 });
+    }
+
+    updateCartIndicators();
+}
+
+function updateCartIndicators() {
+    const total = userCart.reduce((sum, i) => sum + i.qty, 0);
+    const badge = document.getElementById('cart-badge');
+
+    badge.innerText = total;
+    badge.classList.toggle('hidden', total === 0);
+}
+
+function toggleCart() {
+    const drawer = document.getElementById('cart-drawer');
+    drawer.classList.toggle('hidden');
+    drawer.classList.toggle('flex');
+
+    if (!drawer.classList.contains('hidden')) {
+        renderCartDetails();
+    }
+}
+
+function renderCartDetails() {
+    const container = document.getElementById('cart-list');
+
+    if (!userCart.length) {
+        container.innerHTML = "السلة فارغة";
+        return;
+    }
+
+    let html = '';
+    let total = 0;
+
+    userCart.forEach(item => {
+        total += item.price * item.qty;
+
+        html += `
+        <div class="glass-panel p-4 rounded-xl flex justify-between">
+            <span>${item.name} × ${item.qty}</span>
+            <span>${item.price * item.qty}</span>
         </div>
-    </div>
+        `;
+    });
 
-    <!-- المنيو الرئيسية -->
-    <div id="main-app" class="hidden min-h-screen flex flex-col">
-        <!-- الهيدر -->
-        <header class="sticky top-0 z-[100] bg-[#0a0f0d]/90 backdrop-blur-xl border-b border-white/5 px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <img src="images/marbucks-logo.png" class="w-12 h-12 rounded-full border border-[#d4af37]/40">
-                <div class="leading-none">
-                    <h2 class="text-xl font-black uppercase italic tracking-tighter">Marbucks</h2>
-                    <p id="branch-display" class="text-[9px] gold-text font-bold mt-1 uppercase"></p>
-                </div>
-            </div>
-            <div class="flex items-center gap-4">
-                <button onclick="openPasswordModal()" class="text-white/60 hover:text-white transition-colors p-2">
-                    <!-- أيقونة الإعدادات -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                </button>
-                <div class="relative" onclick="toggleCart()">
-                    <div class="bg-[#d4af37] p-3 rounded-2xl shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#0a0f0d]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                        </svg>
-                    </div>
-                    <span id="cart-badge" class="absolute -top-2 -right-2 bg-red-600 text-white text-[11px] w-5 h-5 rounded-full flex items-center justify-center font-black hidden border-2 border-[#0a0f0d]">0</span>
-                </div>
-            </div>
-        </header>
+    container.innerHTML = html;
+    document.getElementById('cart-total-price').innerText = total + " ريال";
+}
 
-        <!-- أكمل بقية أجزاء HTML كما هي (التبويبات، شبكة المنتجات، الفوتر...الخ) -->
+/* =========================
+   📦 إرسال الطلب (احترافي)
+========================= */
+async function sendOrderToWhatsApp() {
+    if (!userCart.length) return;
 
-    <script>
-        // حفظ واسترجاع المنتجات والسلة تلقائياً
-        const PRODUCTS_KEY = "mdb_products_v1";
-        const CART_KEY = "mdb_cart_v1";
+    const total = userCart.reduce((s, i) => s + i.price * i.qty, 0);
 
-        let productsDatabase = [
-            // ضع هنا بيانات منتجاتك (مثل الكود السابق)
-        ];
+    // 🔥 حفظ الطلب في Firebase
+    await addDoc(collection(db, "orders"), {
+        branch: activeBranch,
+        items: userCart,
+        total: total,
+        createdAt: new Date()
+    });
 
-        // استرجاع المنتجات من التخزين إذا كانت موجودة
-        if (localStorage.getItem(PRODUCTS_KEY)) {
-            try { productsDatabase = JSON.parse(localStorage.getItem(PRODUCTS_KEY)); } catch {}
-        }
-        function saveProductsDB() {
-            localStorage.setItem(PRODUCTS_KEY, JSON.stringify(productsDatabase));
-        }
+    // 📱 إرسال عبر واتساب
+    let message = `طلب جديد\n${activeBranch}\n`;
+    userCart.forEach(i => {
+        message += `${i.name} × ${i.qty}\n`;
+    });
+    message += `الإجمالي: ${total}`;
 
-        let userCart = [];
-        if (localStorage.getItem(CART_KEY)) {
-            try { userCart = JSON.parse(localStorage.getItem(CART_KEY)); } catch {}
-        }
-        let activeBranch = "";
+    window.open(`https://wa.me/967780011501?text=${encodeURIComponent(message)}`);
 
-        // أكمل بقية دوال الجافاسكريبت مثل كودك السابق مع تحديثات الحفظ
-        // ... عند كل تغيير على المنتجات أو السلة نفذ:
-        // saveProductsDB()  بعد الإضافة أو الحذف من المنتجات
-        // localStorage.setItem(CART_KEY, JSON.stringify(userCart)); داخل updateCartIndicators
+    // تنظيف السلة
+    userCart = [];
+    updateCartIndicators();
+}
 
-        // مثال لتحديث السلة:
-        function updateCartIndicators() {
-            const totalCount = userCart.reduce((sum, item) => sum + item.qty, 0);
-            const badge = document.getElementById('cart-badge');
-            if (totalCount > 0) {
-                badge.innerText = totalCount;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
-            // الحفظ التلقائي
-            localStorage.setItem(CART_KEY, JSON.stringify(userCart));
-        }
+/* =========================
+   🛠️ لوحة الإدارة
+========================= */
+async function addNewProduct() {
+    const name = document.getElementById('new-name').value;
+    const price = parseInt(document.getElementById('new-price').value);
+    const cat = document.getElementById('new-cat').value;
+    const img = document.getElementById('new-img').value || '';
 
-        // عند إرسال الطلب بالواتساب يتم تنظيف السلة وحفظها
-        function sendOrderToWhatsApp() {
-            if (userCart.length === 0) return;
-            // ... تنسيق الرسالة
-            window.open(whatsappUrl, '_blank');
-            userCart = [];
-            localStorage.removeItem(CART_KEY);
-            updateCartIndicators();
-            renderCartDetails();
-        }
-        // ... بقية الدوال كما هي في مشروعك
-    </script>
-</body>
-</html>
+    if (!name || !price) return alert("أدخل البيانات");
+
+    await addDoc(collection(db, "products"), {
+        name, price, cat, img
+    });
+
+    alert("تمت الإضافة");
+    loadProducts();
+}
+
+async function removeProductFromDB(id) {
+    if (!confirm("حذف المنتج؟")) return;
+
+    await deleteDoc(doc(db, "products", id));
+    loadProducts();
+}
+</script>
